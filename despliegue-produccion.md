@@ -1,8 +1,8 @@
 # Despliegue a producción — Backend y base de datos
 
-> Repo: [AgendaPets/Backend_AgendaPets](https://github.com/AgendaPets/Backend_AgendaPets)  
-> Fecha: **15 de septiembre de 2026**  
-> Este archivo documenta **solo** la API (Render) y PostgreSQL (Neon). El frontend tiene su propio documento en el repo [AgendaPets/AgendaPets](https://github.com/AgendaPets/AgendaPets) (`despliegue-produccion.md`).
+> Repo (fork personal): [CarolPinerosTrujillo/Backend_AgendaPets](https://github.com/CarolPinerosTrujillo/Backend_AgendaPets)  
+> Fecha: **5 de octubre de 2026**  
+> Este archivo documenta **solo** la API (Render) y PostgreSQL (Neon). El frontend tiene su propio documento en el fork [CarolPinerosTrujillo/AgendaPets](https://github.com/CarolPinerosTrujillo/AgendaPets) (`despliegue-produccion.md`).
 
 No reemplaza [documentacion.md](documentacion.md) (guía de la API). Aquí queda el puente a producción.
 
@@ -12,10 +12,9 @@ No reemplaza [documentacion.md](documentacion.md) (guía de la API). Aquí queda
 
 | Pieza | Dónde | URL / dato |
 |-------|--------|------------|
-| **API REST** | Render, servicio `agendapets-api` | https://agendapets-api.onrender.com |
-| **Dashboard Render** | `srv-dak51261egvs7394alg0` | https://dashboard.render.com/web/srv-dak51261egvs7394alg0 |
-| **PostgreSQL** | Neon, proyecto AgendaPets (`still-flower-10770367`) | Host directo `ep-old-moon-aynusiem.c-5.us-east-2.aws.neon.tech`, DB `agendapets` |
-| **Frontend (otro repo)** | Vercel, proyecto `agenda-pets` | https://agenda-pets-pi.vercel.app |
+| **API REST** | Render, servicio `agendapets-api-carol` | https://agendapets-api-carol.onrender.com |
+| **PostgreSQL** | Neon, proyecto `agendapets` | Host directo `ep-royal-union-b541j7oi.c-7.us-east-2.aws.neon.tech`, DB `neondb` |
+| **Frontend (otro repo)** | Vercel, proyecto `agendapets1` | https://agendapets1.vercel.app |
 
 Antes el servicio de Render **fallaba al construir**: runtime Docker y en GitHub no había `Dockerfile`. La API tampoco estaba endurecida para producción (credenciales en properties, CORS incompleto, sin health).
 
@@ -85,12 +84,12 @@ Sin `Dockerfile` el deploy quedaba en `build_failed`. Se añadió:
 
 | Campo | Valor |
 |-------|--------|
-| Proyecto | AgendaPets (`still-flower-10770367`) |
+| Proyecto | `agendapets` |
 | Región | `aws-us-east-2` |
-| Base | `agendapets` |
+| Base | `neondb` |
 | Rol | `neondb_owner` |
-| Host **correcto para Hikari** | `ep-old-moon-aynusiem.c-5.us-east-2.aws.neon.tech` |
-| JDBC | `jdbc:postgresql://ep-old-moon-aynusiem.c-5.us-east-2.aws.neon.tech/agendapets?sslmode=require` |
+| Host **correcto para Hikari** | `ep-royal-union-b541j7oi.c-7.us-east-2.aws.neon.tech` |
+| JDBC | `jdbc:postgresql://ep-royal-union-b541j7oi.c-7.us-east-2.aws.neon.tech:5432/neondb?sslmode=require` |
 
 **No usar el hostname `-pooler`.** El pooler de Neon (PgBouncer) y el pool de Hikari se pisan; las conexiones se caen o se quedan colgadas.
 
@@ -110,7 +109,7 @@ Hibernate crea/actualiza esquema. En esta salida se añadió `servicios.visible`
 | `SPRING_DATASOURCE_USERNAME` | `neondb_owner` |
 | `SPRING_DATASOURCE_PASSWORD` | Solo en Render, nunca en Git |
 | `JWT_SECRET` | ≥ 32 caracteres; obligatorio con perfil `prod` |
-| `CORS_ALLOWED_ORIGINS` | `https://agenda-pets-pi.vercel.app,https://*.vercel.app` |
+| `CORS_ALLOWED_ORIGINS` | `https://agendapets1.vercel.app,http://localhost:5500,http://127.0.0.1:5500` |
 | `SPRING_PROFILES_ACTIVE` | `prod` |
 | `APP_SEED_ENABLED` | `true` (idempotente) |
 | `PORT` | Lo inyecta Render |
@@ -159,7 +158,7 @@ Detalle de endpoints y roles: [documentacion.md](documentacion.md).
 | `POST /api/reservas` (cliente, `tamano` Pequeño) | 201, persistido en Neon |
 | `PATCH /api/reservas/{id}/estado` CANCELADA | 200 |
 | `POST /registro` | 201 |
-| Preflight CORS desde `https://agenda-pets-pi.vercel.app` | origen permitido |
+| Preflight CORS desde `https://agendapets1.vercel.app` | origen permitido |
 
 ---
 
@@ -183,9 +182,9 @@ No se suben `.env` ni secretos reales.
 ```
 
 ```bash
-curl https://agendapets-api.onrender.com/api/health
+curl https://agendapets-api-carol.onrender.com/api/health
 
-curl -X POST https://agendapets-api.onrender.com/api/auth/login \
+curl -X POST https://agendapets-api-carol.onrender.com/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"correo":"admin@agendapets.com","contrasena":"admin123"}'
 ```
