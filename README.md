@@ -27,7 +27,8 @@
 | Frontend | Vercel | Implementado |
 | Backend | Render | Implementado |
 
-> Frontend conectado con el backend: [https://agenda-pets-pi.vercel.app/](https://agenda-pets-pi.vercel.app/)
+> Frontend conectado con el backend: [https://agendapets1.vercel.app/](https://agendapets1.vercel.app/)
+> API desplegada: [https://agendapets-api-carol.onrender.com](https://agendapets-api-carol.onrender.com)
 
 ---
 
@@ -35,8 +36,8 @@
 
 | Repositorio | Descripción |
 |-------------|-------------|
-| [AgendaPets/AgendaPets](https://github.com/AgendaPets/AgendaPets) | Frontend (HTML, CSS, JS) |
-| [AgendaPets/Backend_AgendaPets](https://github.com/AgendaPets/Backend_AgendaPets) | Backend (Spring Boot) — este repositorio |
+| [CarolPinerosTrujillo/AgendaPets](https://github.com/CarolPinerosTrujillo/AgendaPets) | Frontend (HTML, CSS, JS) |
+| [CarolPinerosTrujillo/Backend_AgendaPets](https://github.com/CarolPinerosTrujillo/Backend_AgendaPets) | Backend (Spring Boot) — este repositorio |
 
 ---
 
@@ -63,7 +64,7 @@
 ### 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/AgendaPets/Backend_AgendaPets.git
+git clone https://github.com/CarolPinerosTrujillo/Backend_AgendaPets.git
 cd Backend_AgendaPets
 ```
 
