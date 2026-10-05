@@ -9,6 +9,7 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Neon-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://neon.tech)
 [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 [![JWT](https://img.shields.io/badge/JWT-autenticación-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)](https://jwt.io/)
+[![API](https://img.shields.io/badge/API_en_vivo-Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://agendapets-api-carol.onrender.com/api/health)
 
 </div>
 
@@ -20,15 +21,23 @@
 
 ---
 
-## Deploy
+## Despliegue
 
-| Componente | Plataforma | Estado |
-|------------|-----------|--------|
-| Frontend | Vercel | Implementado |
-| Backend | Render | Implementado |
+| Componente | Plataforma | URL |
+|------------|-----------|-----|
+| Frontend | Vercel (`agendapets1`) | https://agendapets1.vercel.app |
+| API REST | Render (`agendapets-api-carol`) | https://agendapets-api-carol.onrender.com |
+| Base de datos | Neon (PostgreSQL) | host directo `ep-royal-union…us-east-2.aws.neon.tech` |
 
-> Frontend conectado con el backend: [https://agendapets1.vercel.app/](https://agendapets1.vercel.app/)
-> API desplegada: [https://agendapets-api-carol.onrender.com](https://agendapets-api-carol.onrender.com)
+> ❤️ **Health check:** [https://agendapets-api-carol.onrender.com/api/health](https://agendapets-api-carol.onrender.com/api/health)
+>
+> ⏱️ Plan gratuito: Render se duerme con inactividad (~15 min). El primer request tarda ~1 minuto.
+
+```
+ Navegador → Vercel (front) → Render (Spring Boot + Docker) → Neon (PostgreSQL)
+```
+
+> Detalle completo del despliegue (env vars, CORS, Docker): [despliegue-produccion.md](despliegue-produccion.md)
 
 ---
 
@@ -79,7 +88,7 @@ cp .env.example .env
 O ejecuta directamente en PowerShell:
 
 ```powershell
-$env:SPRING_DATASOURCE_URL="jdbc:postgresql://TU_HOST/agendapets?sslmode=require"
+$env:SPRING_DATASOURCE_URL="jdbc:postgresql://TU_HOST:5432/TU_DB?sslmode=require"
 $env:SPRING_DATASOURCE_USERNAME="TU_USUARIO"
 $env:SPRING_DATASOURCE_PASSWORD="TU_PASSWORD"
 $env:JWT_SECRET="tu-clave-secreta-de-al-menos-32-caracteres"
@@ -197,6 +206,8 @@ La API estará disponible en: `http://localhost:8080`
 - Diego Rojas
 - Juan Camilo Acevedo
 - Valería Díaz
+
+> 📌 **Proyecto original del bootcamp Generation.** Fork, despliegue y mantenimiento propio por **Carol Piñeros** (API en Render, base de datos en Neon, frontend en Vercel).
 
 ---
 
