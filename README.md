@@ -31,7 +31,7 @@
 
 > ❤️ **Health check:** [https://agendapets-api-carol.onrender.com/api/health](https://agendapets-api-carol.onrender.com/api/health)
 >
-> ⏱️ Plan gratuito: Render se duerme con inactividad (~15 min). El primer request tarda ~1 minuto.
+> ⚡ Plan gratuito: el workflow [keep-alive](.github/workflows/keep-alive.yml) (GitHub Actions, cada 10 min) mantiene Render despierto. Catálogo y datos del negocio se sirven desde caché en memoria.
 
 ```
  Navegador → Vercel (front) → Render (Spring Boot + Docker) → Neon (PostgreSQL)

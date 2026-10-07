@@ -5,6 +5,8 @@ import com.agendapets.agendapets.dto.ServicioResponseDTO;
 import com.agendapets.agendapets.model.Servicio;
 import com.agendapets.agendapets.repository.ServicioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ public class ServicioService {
     private final ServicioRepository servicioRepository;
 
     @Transactional
+    @CacheEvict(value = "servicios", allEntries = true)
     public ServicioResponseDTO crear(ServicioRequestDTO dto) {
         if (dto.getNombre() == null || dto.getNombre().isBlank()) {
             throw new IllegalArgumentException("El nombre del servicio es obligatorio.");
@@ -41,6 +44,7 @@ public class ServicioService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "servicios", key = "#root.target.esAdmin()")
     public List<ServicioResponseDTO> listarTodos() {
         boolean admin = esAdmin();
         return servicioRepository.findAll().stream()
@@ -57,6 +61,7 @@ public class ServicioService {
     }
 
     @Transactional
+    @CacheEvict(value = "servicios", allEntries = true)
     public ServicioResponseDTO actualizar(Long id, ServicioRequestDTO dto) {
         Servicio servicio = servicioRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Servicio no encontrado con ID: " + id));
@@ -81,6 +86,7 @@ public class ServicioService {
     }
 
     @Transactional
+    @CacheEvict(value = "servicios", allEntries = true)
     public void eliminar(Long id) {
         if (!servicioRepository.existsById(id)) {
             throw new IllegalArgumentException("Servicio no encontrado con ID: " + id);
@@ -102,7 +108,7 @@ public class ServicioService {
                 .build();
     }
 
-    private boolean esAdmin() {
+    public boolean esAdmin() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return auth != null && auth.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));

@@ -4,6 +4,8 @@ import com.agendapets.agendapets.dto.NegocioInfoRequestDTO;
 import com.agendapets.agendapets.model.NegocioInfo;
 import com.agendapets.agendapets.repository.NegocioInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,6 +14,7 @@ public class NegocioInfoService {
     @Autowired
     private NegocioInfoRepository repository;
 
+    @Cacheable("negocioInfo")
     public NegocioInfo obtenerInfo() {
         return repository.findAll().stream().findFirst().orElseGet(() -> {
             NegocioInfo defaultInfo = new NegocioInfo(
@@ -24,6 +27,7 @@ public class NegocioInfoService {
         });
     }
 
+    @CacheEvict(value = "negocioInfo", allEntries = true)
     public NegocioInfo actualizarInfo(NegocioInfoRequestDTO dto) {
         NegocioInfo infoActual = obtenerInfo();
 
